@@ -23,7 +23,7 @@ public class Grid {
     update position and num of steps in Ant.  Updating the grid live will prevent the disappearing Ants.
      */
 
-    public void Step(){
+    /*public void Step(){
         Grid tempGrid = new Grid(gridWidth);
         for(int i = 0; i < grid.length; i++)
         {
@@ -34,6 +34,28 @@ public class Grid {
             }
         }
         grid = tempGrid.grid;
+        ResetOrganisms();
+        PrintGrid();
+    }*/
+
+    public void Step()
+    {
+        for(int i = 0; i < grid.length; i++)
+        {
+            if(grid[i] != null && !grid[i].m_hasMoved)
+            {
+                grid[i].Move(this);
+                if(grid[grid[i].m_position] == null) {
+                    if (grid[i].m_position != i) {
+                        grid[grid[i].m_position] = grid[i];
+                        grid[i] = null;
+                    }
+                }else
+                {
+                    grid[i].m_position = i;
+                }
+            }
+        }
         ResetOrganisms();
         PrintGrid();
     }

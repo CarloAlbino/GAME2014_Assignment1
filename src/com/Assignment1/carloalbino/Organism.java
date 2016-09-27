@@ -10,7 +10,7 @@ public abstract class Organism {
     public int m_position;
     public boolean m_hasMoved;
 
-    public abstract void Move(Grid grid);
+    public abstract int Move(Grid grid);
     public abstract void Breed();
     public int GetRandomNumber(int min, int max)
     {

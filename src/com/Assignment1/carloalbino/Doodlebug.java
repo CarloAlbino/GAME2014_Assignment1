@@ -5,8 +5,8 @@ package com.Assignment1.carloalbino;
  */
 public class Doodlebug extends Organism {
     @Override
-    public void Move(Grid grid) {
-
+    public int Move(Grid grid) {
+        return 0;
     }
 
     @Override
