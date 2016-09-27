@@ -5,12 +5,28 @@ package com.Assignment1.carloalbino;
  */
 public class Doodlebug extends Organism {
     @Override
-    public int Move(Grid grid) {
+    public void Move(Grid grid) {
+
+    }
+
+    @Override
+    public void RevertMove(int i) {
+
+    }
+
+    @Override
+    public int GetPosition() {
         return 0;
     }
 
     @Override
-    public void Breed() {
+    public boolean HasMoved() {
+        return false;
+    }
+
+    @Override
+    public void Breed(Grid world) {
 
     }
+
 }

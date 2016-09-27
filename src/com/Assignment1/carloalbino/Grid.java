@@ -18,46 +18,39 @@ public class Grid {
         grid = new Organism[numOfCells];
     }
 
-    /*
-    Live update the grid from the grid class.  Get random direction from Ant, update the grid here if possible,
-    update position and num of steps in Ant.  Updating the grid live will prevent the disappearing Ants.
-     */
-
-    /*public void Step(){
-        Grid tempGrid = new Grid(gridWidth);
-        for(int i = 0; i < grid.length; i++)
-        {
-            if(grid[i] != null && !grid[i].m_hasMoved)
-            {
-                grid[i].Move(this);
-                tempGrid.grid[grid[i].m_position] = grid[i];
-            }
-        }
-        grid = tempGrid.grid;
-        ResetOrganisms();
-        PrintGrid();
-    }*/
-
     public void Step()
     {
         for(int i = 0; i < grid.length; i++)
         {
-            if(grid[i] != null && !grid[i].m_hasMoved)
+            if(grid[i] != null && !grid[i].HasMoved())      // If the grid's cell has an organism and it hasn't already moved.
             {
-                grid[i].Move(this);
-                if(grid[grid[i].m_position] == null) {
-                    if (grid[i].m_position != i) {
-                        grid[grid[i].m_position] = grid[i];
-                        grid[i] = null;
-                    }
-                }else
+                grid[i].Move(this);                            // Move the Organism (changes it's m_position)
+                if(grid[grid[i].GetPosition()] == null)        // Check the new position of the Organism in the grid. If there is no other Organism already there.
                 {
-                    grid[i].m_position = i;
+                    if (grid[i].GetPosition() != i)            // If the new position is not the same as the current position.
+                    {
+                        grid[grid[i].GetPosition()] = grid[i]; // Update the grid with the Organism's new position.
+                        grid[i] = null;                        // Clear the old position on the grid.
+                    }
+                }
+                else
+                {
+                    // If there is an Organism in cell that you want to move in, reset the position to the current cell.
+                    grid[i].RevertMove(i);
                 }
             }
         }
-        ResetOrganisms();
-        PrintGrid();
+
+        for(int i = 0; i < grid.length; i++)
+        {
+            if(grid[i] != null)
+            {
+                grid[i].Breed(this);
+            }
+        }
+
+        ResetOrganisms();   // Reset all the Organism's m_hasMoved flag to false.
+        PrintGrid();        // Prints out the grid with all the new changes.
     }
 
     public void AddOrganism(Organism o, int position)
@@ -74,39 +67,40 @@ public class Grid {
     {
         if(dir > 3 || dir < 0)
             dir = 0;
+        int nextCell = currentCell;
         switch (dir)
         {
             case 0:
-                //up
+                // Top
                 if(currentCell - gridWidth < 0)
                     return false;
                 else
-                    currentCell -= gridWidth;
+                    nextCell -= gridWidth;
                 break;
             case 1:
-                //left
-                if(currentCell % gridWidth == 0)
+                // Left
+                if(currentCell % gridWidth == 0 && currentCell - 1 > -1)
                     return false;
                 else
-                    currentCell--;
+                    nextCell--;
                 break;
             case 2:
-                //down
-                if(currentCell + gridWidth > (gridWidth * gridWidth) - 1)
+                // Bottom
+                if(currentCell + gridWidth > (gridWidth * gridWidth))
                     return false;
                 else
-                    currentCell += gridWidth;
+                    nextCell += gridWidth;
                 break;
             case 3:
-                //right
-                if(currentCell % gridWidth == currentCell)
+                // Right
+                if(currentCell % gridWidth == currentCell  && currentCell + 1 < gridWidth * gridWidth)
                     return false;
                 else
-                    currentCell++;
+                    nextCell++;
                 break;
         }
 
-        if(grid[currentCell] != null)
+        if(grid[nextCell] != null)
         {
             return false;
         }
@@ -128,7 +122,6 @@ public class Grid {
             }
             outputGrid += "\n";
         }
-
         System.out.println(outputGrid);
     }
 
