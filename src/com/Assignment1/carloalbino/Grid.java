@@ -1,5 +1,7 @@
 package com.Assignment1.carloalbino;
 
+import java.io.IOException;
+
 /**
  * Created by Carlo Albino on 2016-09-20.
  */
@@ -16,9 +18,24 @@ public class Grid {
         grid = new Organism[numOfCells];
     }
 
-    public void Step()
-    {
+    /*
+    Live update the grid from the grid class.  Get random direction from Ant, update the grid here if possible,
+    update position and num of steps in Ant.  Updating the grid live will prevent the disappearing Ants.
+     */
 
+    public void Step(){
+        Grid tempGrid = new Grid(gridWidth);
+        for(int i = 0; i < grid.length; i++)
+        {
+            if(grid[i] != null && !grid[i].m_hasMoved)
+            {
+                grid[i].Move(this);
+                tempGrid.grid[grid[i].m_position] = grid[i];
+            }
+        }
+        grid = tempGrid.grid;
+        ResetOrganisms();
+        PrintGrid();
     }
 
     public void AddOrganism(Organism o, int position)
@@ -41,21 +58,29 @@ public class Grid {
                 //up
                 if(currentCell - gridWidth < 0)
                     return false;
+                else
+                    currentCell -= gridWidth;
                 break;
             case 1:
-                //right
+                //left
                 if(currentCell % gridWidth == 0)
                     return false;
+                else
+                    currentCell--;
                 break;
             case 2:
                 //down
                 if(currentCell + gridWidth > (gridWidth * gridWidth) - 1)
                     return false;
+                else
+                    currentCell += gridWidth;
                 break;
             case 3:
-                //left
+                //right
                 if(currentCell % gridWidth == currentCell)
                     return false;
+                else
+                    currentCell++;
                 break;
         }
 
@@ -83,5 +108,16 @@ public class Grid {
         }
 
         System.out.println(outputGrid);
+    }
+
+    public void ResetOrganisms()
+    {
+        for(int i = 0; i < grid.length; i++)
+        {
+            if(grid[i] != null)
+            {
+                grid[i].m_hasMoved = false;
+            }
+        }
     }
 }

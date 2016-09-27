@@ -8,6 +8,7 @@ import java.util.Random;
 public abstract class Organism {
     public String m_letter = "-";
     public int m_position;
+    public boolean m_hasMoved;
 
     public abstract void Move(Grid grid);
     public abstract void Breed();
