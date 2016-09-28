@@ -79,21 +79,21 @@ public class Grid {
                 break;
             case 1:
                 // Left
-                if(currentCell % gridWidth == 0 && currentCell - 1 > -1)
+                if(currentCell % gridWidth == 0 || currentCell - 1 > -1)
                     return false;
                 else
                     nextCell--;
                 break;
             case 2:
                 // Bottom
-                if(currentCell + gridWidth > (gridWidth * gridWidth))
+                if(currentCell + gridWidth > (gridWidth * gridWidth) - 1)
                     return false;
                 else
                     nextCell += gridWidth;
                 break;
             case 3:
                 // Right
-                if(currentCell % gridWidth == currentCell  && currentCell + 1 < gridWidth * gridWidth)
+                if(currentCell % gridWidth == currentCell - 1 || currentCell + 1 < gridWidth * gridWidth)
                     return false;
                 else
                     nextCell++;
