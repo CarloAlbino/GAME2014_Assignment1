@@ -19,15 +19,16 @@ public class Grid {
     // Run a time step of the simulation.
     public void Step()
     {
+        // First move all the Doodlebugs.
         for(int i = 0; i < grid.length; i++)
         {
-            if(grid[i] != null && !grid[i].HasMoved())      // If the grid's cell has an organism and it hasn't already moved.
+            if (grid[i] != null && !grid[i].HasMoved())      // If the grid's cell has an organism and it hasn't already moved.
             {
-                grid[i].Move(this);                            // Move the Organism (changes it's m_position)
-                // If grid is not null (in case a doodle bug starves after a move.
-                if(grid[i] != null) {
-                    if (grid[i] instanceof Doodlebug) // If the organism is a Doodlebug..
-                    {
+                if (grid[i] instanceof Doodlebug) // If the organism is a Doodlebug..
+                {
+                    grid[i].Move(this, grid[i].GetRandomNumber(0, 3));          // Move the Organism (changes it's m_position)
+                    // If grid is not null (in case a doodle bug starves after a move.
+                    if (grid[i] != null) {
                         // ...and the other cell has a Doodlebug
                         if (grid[grid[i].GetPosition()] instanceof Doodlebug) {
                             // Revert Move
@@ -39,24 +40,34 @@ public class Grid {
                                 grid[i] = null;                        // Clear the old position on the grid.
                             }
                         }
-                    } else {
-                        // If the organism that is moving and is an Ant
-                        if (grid[grid[i].GetPosition()] == null)        // Check the new position of the Organism in the grid. If there is no other Organism already there.
-                        {
-                            if (grid[i].GetPosition() != i)            // If the new position is not the same as the current position.
-                            {
-                                grid[grid[i].GetPosition()] = grid[i]; // Update the grid with the Organism's new position.
-                                grid[i] = null;                        // Clear the old position on the grid.
-                            }
-                        } else {
-                            // If there is an Organism in cell that you want to move in, reset the position to the current cell.
-                            grid[i].RevertMove(i);
-                        }
                     }
                 }
             }
-
         }
+
+        // Then move all the Ants
+        for(int i = 0; i < grid.length; i++)
+        {
+            if (grid[i] != null && !grid[i].HasMoved())      // If the grid's cell has an organism and it hasn't already moved.
+            {
+                if (grid[i] instanceof Ant) // If the organism is an Ant..
+                {
+                    grid[i].Move(this, grid[i].GetRandomNumber(0, 3));          // Move the Organism (changes it's m_position)
+                    if (grid[grid[i].GetPosition()] == null)        // Check the new position of the Organism in the grid. If there is no other Organism already there.
+                    {
+                        if (grid[i].GetPosition() != i)            // If the new position is not the same as the current position.
+                        {
+                            grid[grid[i].GetPosition()] = grid[i]; // Update the grid with the Organism's new position.
+                            grid[i] = null;                        // Clear the old position on the grid.
+                        }
+                    } else {
+                        // If there is an Organism in cell that you want to move in, reset the position to the current cell.
+                        grid[i].RevertMove(i);
+                    }
+                }
+            }
+        }
+
 
         for(int i = 0; i < grid.length; i++)
         {
@@ -118,6 +129,11 @@ public class Grid {
                 else
                     nextCell++;
                 break;
+        }
+
+        if(nextCell > grid.length - 1)
+        {
+            return false;
         }
 
         if(grid[nextCell] != null)

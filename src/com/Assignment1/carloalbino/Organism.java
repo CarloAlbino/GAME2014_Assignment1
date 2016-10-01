@@ -15,9 +15,9 @@ public abstract class Organism {
     public int m_nextPos;               // The position that the new organism will spawn.
 
     // Moves the organism in a random direction.
-    public void Move(Grid world)
+    public void Move(Grid world, int nextPos)
     {
-        int nextDir = GetRandomNumber(0, 3);
+        int nextDir = nextPos;//GetRandomNumber(0, 3);
         m_hasMoved = true;
         switch (nextDir) {
             case 0:

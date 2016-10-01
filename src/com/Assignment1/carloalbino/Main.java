@@ -38,14 +38,14 @@ public class Main {
             grid.AddOrganism(new Ant(newPos), newPos);
         }
 
-        grid.PrintGrid();   // Print the initial grid.
-
         // If the console input is not the letter 'q' the simulation will run a time step.
+        // Runs one time step before prompting the user for input.
         char c;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         do{
-            c = (char) br.read();
             grid.Step();
+            System.out.println("Press enter to go to next time step.  Press q to quit simulation.");
+            c = (char) br.read();
         }while(c != 'q');
     }
 }

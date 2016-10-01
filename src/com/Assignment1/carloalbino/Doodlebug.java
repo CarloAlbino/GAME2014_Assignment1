@@ -21,10 +21,11 @@ public class Doodlebug extends Organism {
     }
 
     @Override
-    public void Move(Grid world)
+    public void Move(Grid world, int nextPos)
     {
         int currentPos = m_position;
-        super.Move(world);
+
+        super.Move(world, CheckSurroundingCellsForAnts(world, nextPos)); // Check surroundings looks for the nearest Ant
         m_starveCount++;
         if(world.grid[m_position] instanceof Ant)
         {
@@ -57,4 +58,26 @@ public class Doodlebug extends Organism {
         }
     }
 
+    // Returns a next cell with an Ant in it if it exists, else it passes through the random number.
+    private int CheckSurroundingCellsForAnts(Grid world, int randPos)
+    {
+        int adjacentCell = m_position;
+        if(world.IsEmptyCell(adjacentCell, 3) && world.grid[adjacentCell + 1] instanceof Ant)
+        {
+            return  adjacentCell++;
+        }else if(world.IsEmptyCell(adjacentCell, 1) && world.grid[adjacentCell - 1] instanceof Ant)
+        {
+            return adjacentCell--;
+        }else if(world.IsEmptyCell(adjacentCell, 2) && world.grid[adjacentCell + world.GetWidth()] instanceof Ant)
+        {
+            return adjacentCell + world.GetWidth();
+        }
+        else if(world.IsEmptyCell(adjacentCell, 0) && world.grid[adjacentCell - world.GetWidth()] instanceof Ant)
+        {
+            return adjacentCell - world.GetWidth();
+        }else
+        {
+            return randPos;
+        }
+    }
 }
