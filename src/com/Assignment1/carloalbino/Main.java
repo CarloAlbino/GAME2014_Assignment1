@@ -8,11 +8,14 @@ public class Main {
 
     public static void main(String[] args) throws IOException{
         int gridWidth = 20;
+        int numberOfDoodlebugs = 10;
+        int numberOfAnts = 110;
+
         // Instantiate grid.
         Grid grid = new Grid(gridWidth);
 
-        // Randomly place 5 doodlebugs on the grid.
-        for(int i = 0; i < 5; i++)
+        // Randomly place doodlebugs on the grid.
+        for(int i = 0; i < numberOfDoodlebugs; i++)
         {
             int newPos;
             do {
@@ -23,8 +26,8 @@ public class Main {
             grid.AddOrganism(new Doodlebug(newPos), newPos);
         }
 
-        // Randomly place 100 ant on the grid.
-        for(int i = 0; i < 100; i++)
+        // Randomly place ant on the grid.
+        for(int i = 0; i < numberOfAnts; i++)
         {
             int newPos;
             do {
@@ -35,7 +38,9 @@ public class Main {
             grid.AddOrganism(new Ant(newPos), newPos);
         }
 
-        grid.PrintGrid();
+        grid.PrintGrid();   // Print the initial grid.
+
+        // If the console input is not the letter 'q' the simulation will run a time step.
         char c;
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         do{

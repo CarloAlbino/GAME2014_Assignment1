@@ -1,23 +1,22 @@
 package com.Assignment1.carloalbino;
 
-import java.io.IOException;
-
 /**
  * Created by Carlo Albino on 2016-09-20.
  */
 public class Grid {
-    private int gridWidth;
-    private int numOfCells;
+    private int gridWidth;  // The width of the grid. The grid is a square so it is also the height.
+    private int numOfCells; // The number of cells in the world.
 
-    public Organism[] grid;
+    public Organism[] grid; // The array that stores the organism of the world.
 
     public Grid(int n)
     {
-        gridWidth = n;
-        numOfCells = gridWidth * gridWidth;
-        grid = new Organism[numOfCells];
+        gridWidth = n;                      // Set the dimensions of the grid.
+        numOfCells = gridWidth * gridWidth; // Set the number of cells in the world.
+        grid = new Organism[numOfCells];    // Initialize the array.
     }
 
+    // Run a time step of the simulation.
     public void Step()
     {
         for(int i = 0; i < grid.length; i++)
@@ -25,20 +24,38 @@ public class Grid {
             if(grid[i] != null && !grid[i].HasMoved())      // If the grid's cell has an organism and it hasn't already moved.
             {
                 grid[i].Move(this);                            // Move the Organism (changes it's m_position)
-                if(grid[grid[i].GetPosition()] == null)        // Check the new position of the Organism in the grid. If there is no other Organism already there.
-                {
-                    if (grid[i].GetPosition() != i)            // If the new position is not the same as the current position.
+                // If grid is not null (in case a doodle bug starves after a move.
+                if(grid[i] != null) {
+                    if (grid[i] instanceof Doodlebug) // If the organism is a Doodlebug..
                     {
-                        grid[grid[i].GetPosition()] = grid[i]; // Update the grid with the Organism's new position.
-                        grid[i] = null;                        // Clear the old position on the grid.
+                        // ...and the other cell has a Doodlebug
+                        if (grid[grid[i].GetPosition()] instanceof Doodlebug) {
+                            // Revert Move
+                            grid[i].RevertMove(i);
+                        } else {
+                            if (grid[i].GetPosition() != i)            // If the new position is not the same as the current position.
+                            {
+                                grid[grid[i].GetPosition()] = grid[i]; // Update the grid with the Organism's new position.
+                                grid[i] = null;                        // Clear the old position on the grid.
+                            }
+                        }
+                    } else {
+                        // If the organism that is moving and is an Ant
+                        if (grid[grid[i].GetPosition()] == null)        // Check the new position of the Organism in the grid. If there is no other Organism already there.
+                        {
+                            if (grid[i].GetPosition() != i)            // If the new position is not the same as the current position.
+                            {
+                                grid[grid[i].GetPosition()] = grid[i]; // Update the grid with the Organism's new position.
+                                grid[i] = null;                        // Clear the old position on the grid.
+                            }
+                        } else {
+                            // If there is an Organism in cell that you want to move in, reset the position to the current cell.
+                            grid[i].RevertMove(i);
+                        }
                     }
                 }
-                else
-                {
-                    // If there is an Organism in cell that you want to move in, reset the position to the current cell.
-                    grid[i].RevertMove(i);
-                }
             }
+
         }
 
         for(int i = 0; i < grid.length; i++)
@@ -53,16 +70,19 @@ public class Grid {
         PrintGrid();        // Prints out the grid with all the new changes.
     }
 
+    // Add an Organism to the grid at a position.
     public void AddOrganism(Organism o, int position)
     {
         grid[position] = o;
     }
 
+    // Returns the width of the grid.
     public int GetWidth()
     {
         return gridWidth;
     }
 
+    // Is the cell of the grid empty.
     public boolean IsEmptyCell(int currentCell, int dir)
     {
         if(dir > 3 || dir < 0)
@@ -108,6 +128,7 @@ public class Grid {
         return true;
     }
 
+    // Prints the grid to the console.
     public void PrintGrid()
     {
         String outputGrid = "";
@@ -125,6 +146,7 @@ public class Grid {
         System.out.println(outputGrid);
     }
 
+    // Reset the has moved variable of Organism after the grid has been updated.
     public void ResetOrganisms()
     {
         for(int i = 0; i < grid.length; i++)

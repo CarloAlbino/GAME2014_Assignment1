@@ -6,12 +6,15 @@ import java.util.Random;
  * Created by Carlo Albino on 2016-09-20.
  */
 public abstract class Organism {
-    public String m_letter = "-";
-    public int m_position;
-    public boolean m_hasMoved;
-    public int m_stepsTaken;
-    public int m_maxSteps;
+    public String m_letter = "- ";      // The string that is displayed when the grid is printed.
+    public int m_position;              // The current position of the organism.
+    public boolean m_hasMoved;          // Has the organism moved in the current time step.
+    public int m_stepsTaken;            // How many steps has the organism taken since it last multiplied.
+    public int m_maxSteps;              // The maximum amount of steps before the organism will breed.
+    public boolean m_spawnNewOrganism;  // Can the organism spawn a new organism.
+    public int m_nextPos;               // The position that the new organism will spawn.
 
+    // Moves the organism in a random direction.
     public void Move(Grid world)
     {
         int nextDir = GetRandomNumber(0, 3);
@@ -49,6 +52,7 @@ public abstract class Organism {
         }
     }
 
+    // Reverts the move that was taken.
     public void RevertMove(int i)
     {
         m_position = i;
@@ -59,16 +63,19 @@ public abstract class Organism {
         }
     }
 
+    // Returns the position of the organism.
     public int GetPosition()
     {
         return m_position;
     }
 
+    // Returns true if the organism has made a move this time step.
     public boolean HasMoved()
     {
         return  m_hasMoved;
     }
 
+    // Spawns an organism in a random adjacent cell if the cell is empty.
     public void Breed(Grid world)
     {
         if(m_stepsTaken >= m_maxSteps)
@@ -103,12 +110,15 @@ public abstract class Organism {
                         }
                         break;
                 }
-                world.AddOrganism(new Ant(pos), pos);
+                // Signal to spawn a new instance of an organism.
+                m_spawnNewOrganism = true;
+                m_nextPos = pos;
             }
             m_stepsTaken = 0;
         }
     }
 
+    // Returns a random number between the min and max.
     public int GetRandomNumber(int min, int max)
     {
         Random rand = new Random();
