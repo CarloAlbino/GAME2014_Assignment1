@@ -148,12 +148,12 @@ public class Grid {
     public void PrintGrid()
     {
         String outputGrid = "";
-        for(int i = 0; i < 20; i++)
+        for(int i = 0; i < gridWidth; i++)
         {
-            for(int j = 0; j < 20; j++)
+            for(int j = 0; j < gridWidth; j++)
             {
-                if(grid[i * 20 + j] != null)
-                    outputGrid += grid[i * 20 + j].m_letter;
+                if(grid[i * gridWidth + j] != null)
+                    outputGrid += grid[i * gridWidth + j].m_letter;
                 else
                     outputGrid += "- ";
             }
